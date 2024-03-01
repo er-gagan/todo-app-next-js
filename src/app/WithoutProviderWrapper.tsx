@@ -1,8 +1,11 @@
 "use client"
-import React from 'react';
+import React, { useState, useEffect } from 'react'
 
 const WithoutProviderWrapper = ({ children }: { children: React.ReactNode }) => {
-    const isLoggedIn = Boolean(localStorage.getItem("isLoggedIn"))
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    useEffect(() => {
+        setIsLoggedIn(Boolean(localStorage.getItem("isLoggedIn")))
+    }, [])
 
     return (<>
         <div

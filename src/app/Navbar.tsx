@@ -1,12 +1,15 @@
 "use client"
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import toast from 'react-hot-toast';
 import { LuLogOut } from "react-icons/lu";
 import { useRouter } from 'next/navigation'
 import { handleNavigation } from '@/utils/utils';
 const Navbar = () => {
-    const isLoggedIn = Boolean(localStorage.getItem("isLoggedIn"))
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    useEffect(() => {
+        setIsLoggedIn(Boolean(localStorage.getItem("isLoggedIn")))
+    }, [])
     const router = useRouter()
 
     const handleLogout = async () => {

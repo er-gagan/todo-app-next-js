@@ -9,6 +9,18 @@ const GlobalStateWrapper = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         if (typeof window !== 'undefined') {
             if (pathname === location.pathname) {
+                const isLoggedIn = Boolean(localStorage.getItem("isLoggedIn"))
+                if (pathname === "/signin" || pathname === "signup") {
+                    if (isLoggedIn === true) {
+                        location.replace("/")
+                    }
+                }
+
+                if (pathname === "/") {
+                    if (isLoggedIn === false) {
+                        location.replace("/signin")
+                    }
+                }
                 hideLoader()
             } else {
                 showLoader()

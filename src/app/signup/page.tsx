@@ -8,10 +8,7 @@ import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { handleNavigation, hideLoader, showLoader } from '@/utils/utils'
 import Button from '@/components/Button'
-const isLoggedIn = Boolean(localStorage.getItem("isLoggedIn"))
-if (isLoggedIn === true) {
-  location.replace("/")
-}
+
 const SignUp = () => {
   const router = useRouter()
   const [signupFormData, setSignupFormData] = useState({ name: "", email: "", password: "", phone: "" })

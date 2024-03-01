@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Input from '@/components/input'
 import Advertisement from '@/components/Advertisement'
@@ -7,15 +7,15 @@ import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { handleNavigation } from '@/utils/utils'
 import Button from '@/components/Button'
-const isLoggedIn = Boolean(localStorage.getItem("isLoggedIn"))
-if (isLoggedIn === true) {
-  location.replace("/")
-}
+
 
 const Signin = () => {
   const [signinFormData, setSigninFormData] = useState({ email: "", password: "" })
   const router = useRouter()
-  const isLoggedIn = Boolean(localStorage.getItem("isLoggedIn"))
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  useEffect(() => {
+    setIsLoggedIn(Boolean(localStorage.getItem("isLoggedIn")))
+  }, [])
   const handleSubmit = async (e: any) => {
     e.preventDefault()
 

@@ -4,13 +4,6 @@ import React, { useState, useEffect } from "react";
 import AddEditTodo from "./AddEditTodo";
 import { ReactSortable } from "react-sortablejs";
 
-const isLoggedIn = Boolean(localStorage.getItem("isLoggedIn"))
-
-if (isLoggedIn === false) {
-  location.replace("/signin")
-}
-
-
 export default function Home() {
   const [todoList, setTodoList] = useState([])
   const [todoCompletedList, setTodoCompletedList] = useState([])
