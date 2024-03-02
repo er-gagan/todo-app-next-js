@@ -3,6 +3,8 @@ import Button from '@/components/Button'
 import React, { useState, useEffect } from "react";
 import AddEditTodo from "./AddEditTodo";
 import { ReactSortable } from "react-sortablejs";
+import Modal from '@/components/Modal';
+import Input from '@/components/input';
 
 export default function Home() {
   const [todoList, setTodoList] = useState([])
@@ -13,37 +15,41 @@ export default function Home() {
   const handleFetch = async () => {
     const localTodo = localStorage.getItem("todo")
     if (localTodo) {
+      let userData: any = localStorage.getItem("userData")
+      if (userData) {
+        userData = JSON.parse(userData)
+      }
       const { todoList, todoCompletedList }: any = JSON.parse(localTodo)
-      setTodoList(todoList.sort((a: any, b: any) => a.sr_no - b.sr_no))
-      setTodoCompletedList(todoCompletedList.sort((a: any, b: any) => a.sr_no - b.sr_no))
+      setTodoList(todoList.filter((io: any) => io.userId === userData.email).sort((a: any, b: any) => a.sr_no - b.sr_no))
+      setTodoCompletedList(todoCompletedList.filter((io: any) => io.userId === userData.email).sort((a: any, b: any) => a.sr_no - b.sr_no))
       return
     }
 
 
-    const api_res = await fetch(`https://jsonplaceholder.typicode.com/todos`, { method: "GET" })
-    const res_data = await api_res.json()
-    console.log("res_data", res_data)
-    res_data.map((item: any, ind: number) => {
-      item['sr_no'] = ind + 1
-    })
+    // const api_res = await fetch(`https://jsonplaceholder.typicode.com/todos`, { method: "GET" })
+    // const res_data = await api_res.json()
+    // console.log("res_data", res_data)
+    // res_data.map((item: any, ind: number) => {
+    //   item['sr_no'] = ind + 1
+    // })
 
-    let tList = res_data.filter((io: any) => io.completed === false)
-    let tCompList = res_data.filter((io: any) => io.completed === true)
+    // let tList = res_data.filter((io: any) => io.completed === false)
+    // let tCompList = res_data.filter((io: any) => io.completed === true)
 
 
-    tList.map((item: any, ind: number) => {
-      item['sr_no'] = ind + 1
-    })
+    // tList.map((item: any, ind: number) => {
+    //   item['sr_no'] = ind + 1
+    // })
 
-    tCompList.map((item: any, ind: number) => {
-      item['sr_no'] = ind + 1
-    })
+    // tCompList.map((item: any, ind: number) => {
+    //   item['sr_no'] = ind + 1
+    // })
 
-    tList = tList.sort((a: any, b: any) => a.sr_no - b.sr_no)
-    tCompList = tCompList.sort((a: any, b: any) => a.sr_no - b.sr_no)
-    setTodoList(tList)
-    setTodoCompletedList(tCompList)
-    localStorage.setItem("todo", JSON.stringify({ todoList: tList, todoCompletedList: tCompList }))
+    // tList = tList.sort((a: any, b: any) => a.sr_no - b.sr_no)
+    // tCompList = tCompList.sort((a: any, b: any) => a.sr_no - b.sr_no)
+    // setTodoList(tList)
+    // setTodoCompletedList(tCompList)
+    // localStorage.setItem("todo", JSON.stringify({ todoList: tList, todoCompletedList: tCompList }))
   }
 
   useEffect(() => {
@@ -271,14 +277,19 @@ export default function Home() {
         </ReactSortable>
       </div>
       {isModalOpen && (<>
-        <AddEditTodo
+        <Modal
           isOpen={isModalOpen}
           onClose={toggleModal}
-          flag={flag}
-          setFlag={setFlag}
-          editData={editData}
-          setEditData={setEditData}
+          Component={<AddEditTodo
+            onClose={toggleModal}
+            flag={flag}
+            setFlag={setFlag}
+            editData={editData}
+            setEditData={setEditData}
+
+          />}
         />
+
       </>)}
     </>
   );
