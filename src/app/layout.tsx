@@ -28,12 +28,12 @@ export default function RootLayout({
           </WithoutProviderWrapper>
 
         </ClientWrapper>
-      </body>
-      <div id="globalLoader" className="fixed z-[9999] top-1/2 left-1/2 bg-white w-full h-full flex justify-center items-center">
-        <div className="flex justify-center items-center h-screen">
-          <img src="loading.gif" alt="loading image" />
+        <div id="globalLoader" className="fixed z-[9999] top-1/2 left-1/2 bg-white w-full h-full flex justify-center items-center">
+          <div className="flex justify-center items-center h-screen">
+            <img src="loading.gif" alt="loading image" />
+          </div>
         </div>
-      </div>
+      </body>
     </html>
   );
 }

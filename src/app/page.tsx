@@ -4,52 +4,32 @@ import React, { useState, useEffect } from "react";
 import AddEditTodo from "./AddEditTodo";
 import { ReactSortable } from "react-sortablejs";
 import Modal from '@/components/Modal';
-import Input from '@/components/input';
 
 export default function Home() {
   const [todoList, setTodoList] = useState([])
   const [todoCompletedList, setTodoCompletedList] = useState([])
   const [flag, setFlag] = useState(false)
   const [editData, setEditData] = useState({})
+  const [userData, setUserData] = useState({ email: "" })
+
+  useEffect(() => {
+
+    let userData: any = localStorage.getItem("userData")
+    if (userData) {
+      setUserData(JSON.parse(userData))
+    }
+  }, [])
+
 
   const handleFetch = async () => {
     const localTodo = localStorage.getItem("todo")
     if (localTodo) {
-      let userData: any = localStorage.getItem("userData")
-      if (userData) {
-        userData = JSON.parse(userData)
-      }
       const { todoList, todoCompletedList }: any = JSON.parse(localTodo)
-      setTodoList(todoList.filter((io: any) => io.userId === userData.email).sort((a: any, b: any) => a.sr_no - b.sr_no))
-      setTodoCompletedList(todoCompletedList.filter((io: any) => io.userId === userData.email).sort((a: any, b: any) => a.sr_no - b.sr_no))
+
+      setTodoList(todoList.sort((a: any, b: any) => a.sr_no - b.sr_no))
+      setTodoCompletedList(todoCompletedList.sort((a: any, b: any) => a.sr_no - b.sr_no))
       return
     }
-
-
-    // const api_res = await fetch(`https://jsonplaceholder.typicode.com/todos`, { method: "GET" })
-    // const res_data = await api_res.json()
-    // console.log("res_data", res_data)
-    // res_data.map((item: any, ind: number) => {
-    //   item['sr_no'] = ind + 1
-    // })
-
-    // let tList = res_data.filter((io: any) => io.completed === false)
-    // let tCompList = res_data.filter((io: any) => io.completed === true)
-
-
-    // tList.map((item: any, ind: number) => {
-    //   item['sr_no'] = ind + 1
-    // })
-
-    // tCompList.map((item: any, ind: number) => {
-    //   item['sr_no'] = ind + 1
-    // })
-
-    // tList = tList.sort((a: any, b: any) => a.sr_no - b.sr_no)
-    // tCompList = tCompList.sort((a: any, b: any) => a.sr_no - b.sr_no)
-    // setTodoList(tList)
-    // setTodoCompletedList(tCompList)
-    // localStorage.setItem("todo", JSON.stringify({ todoList: tList, todoCompletedList: tCompList }))
   }
 
   useEffect(() => {
@@ -94,18 +74,16 @@ export default function Home() {
               })
 
               tdata = tdata.sort((a: any, b: any) => a.sr_no - b.sr_no)
-
-              const localTodo = localStorage.getItem("todo")
-              if (localTodo) {
-                const { todoList, todoCompletedList }: any = JSON.parse(localTodo)
-                localStorage.setItem("todo", JSON.stringify({ todoList: tdata, todoCompletedList: todoCompletedList }))
-              }
-              setTodoList(tdata)
+              localStorage.setItem("todo", JSON.stringify({ todoList: tdata, todoCompletedList: todoCompletedList }))
+              setFlag(!flag)
             }
           }}
         >
           {todoList.map((item: any) => (<>
-            <div className="bg-white m-4 p-4 rounded-xl cursor-pointer w-72 h-60" key={item.id}>
+            <div
+              className={`bg-white m-4 p-4 rounded-xl cursor-pointer w-72 h-60 ${item.userId === userData?.email ? "" : "hidden"}`}
+              key={item.id}
+            >
               <div className="py-5 h-36">
                 {truncateString(item.title, 100)}
               </div>
@@ -118,26 +96,22 @@ export default function Home() {
                     onChange={e => {
                       const obj = {
                         ...item,
-                        completed: false
+                        completed: true
                       }
 
-                      const localTodo = localStorage.getItem("todo")
-                      if (localTodo) {
-                        const { todoList, todoCompletedList }: any = JSON.parse(localTodo)
-                        let getTodo = todoList.filter((io: any) => io.id !== obj.id)
-                        getTodo.map((item: any, ind: number) => {
-                          item['sr_no'] = ind + 1
-                        })
-                        getTodo = getTodo.sort((a: any, b: any) => a.sr_no - b.sr_no)
+                      let getTodo = todoList.filter((io: any) => io.id !== obj.id)
+                      getTodo.map((item: any, ind: number) => {
+                        item['sr_no'] = ind + 1
+                      })
+                      getTodo = getTodo.sort((a: any, b: any) => a.sr_no - b.sr_no)
 
-                        let tData = [...todoCompletedList, obj]
-                        tData.map((item: any, ind: number) => {
-                          item['sr_no'] = ind + 1
-                        })
-                        tData = tData.sort((a: any, b: any) => a.sr_no - b.sr_no)
+                      let tData = [...todoCompletedList, obj]
+                      tData.map((item: any, ind: number) => {
+                        item['sr_no'] = ind + 1
+                      })
+                      tData = tData.sort((a: any, b: any) => a.sr_no - b.sr_no)
 
-                        localStorage.setItem("todo", JSON.stringify({ todoList: getTodo, todoCompletedList: tData }))
-                      }
+                      localStorage.setItem("todo", JSON.stringify({ todoList: getTodo, todoCompletedList: tData }))
                       setFlag(!flag)
                     }}
                     checked={item.completed}
@@ -157,13 +131,9 @@ export default function Home() {
                     buttontype="secondary"
                     title="Delete"
                     onClick={() => {
-                      const localTodo = localStorage.getItem("todo")
-                      if (localTodo) {
-                        const { todoList, todoCompletedList }: any = JSON.parse(localTodo)
-                        const data = todoList.filter((io: any) => io.id !== item.id)
-                        localStorage.setItem("todo", JSON.stringify({ todoList: data, todoCompletedList: todoCompletedList }))
-                        setFlag(!flag)
-                      }
+                      const data = todoList.filter((io: any) => io.id !== item.id)
+                      localStorage.setItem("todo", JSON.stringify({ todoList: data, todoCompletedList: todoCompletedList }))
+                      setFlag(!flag)
                     }}
                     className="text-sm"
                   />
@@ -195,18 +165,15 @@ export default function Home() {
               })
 
               tdata = tdata.sort((a: any, b: any) => a.sr_no - b.sr_no)
-
-              const localTodo = localStorage.getItem("todo")
-              if (localTodo) {
-                const { todoList, todoCompletedList }: any = JSON.parse(localTodo)
-                localStorage.setItem("todo", JSON.stringify({ todoList: todoList, todoCompletedList: tdata }))
-              }
-              setTodoCompletedList(tdata)
+              localStorage.setItem("todo", JSON.stringify({ todoList: todoList, todoCompletedList: tdata }))
+              setFlag(!flag)
             }
           }}
         >
           {todoCompletedList.map((item: any, index) => (<>
-            <div className="bg-white m-4 p-4 rounded-xl cursor-pointer w-72 h-60" key={item.id}>
+            <div
+              className={`bg-white m-4 p-4 rounded-xl cursor-pointer w-72 h-60 ${item.userId === userData?.email ? "" : "hidden"}`}
+              key={item.id}>
 
               <div className="py-5 h-36">
                 {truncateString(item.title, 100)}
@@ -223,23 +190,20 @@ export default function Home() {
                         completed: false
                       }
 
-                      const localTodo = localStorage.getItem("todo")
-                      if (localTodo) {
-                        const { todoList, todoCompletedList }: any = JSON.parse(localTodo)
-                        let getTodo = todoCompletedList.filter((io: any) => io.id !== obj.id)
-                        getTodo.map((item: any, ind: number) => {
-                          item['sr_no'] = ind + 1
-                        })
-                        getTodo = getTodo.sort((a: any, b: any) => a.sr_no - b.sr_no)
+                      let getTodo = todoCompletedList.filter((io: any) => io.id !== obj.id)
+                      getTodo.map((item: any, ind: number) => {
+                        item['sr_no'] = ind + 1
+                      })
+                      getTodo = getTodo.sort((a: any, b: any) => a.sr_no - b.sr_no)
 
-                        let tData = [...todoList, obj]
-                        tData.map((item: any, ind: number) => {
-                          item['sr_no'] = ind + 1
-                        })
-                        tData = tData.sort((a: any, b: any) => a.sr_no - b.sr_no)
+                      let tData = [...todoList, obj]
+                      tData.map((item: any, ind: number) => {
+                        item['sr_no'] = ind + 1
+                      })
+                      tData = tData.sort((a: any, b: any) => a.sr_no - b.sr_no)
 
-                        localStorage.setItem("todo", JSON.stringify({ todoList: tData, todoCompletedList: getTodo }))
-                      }
+                      localStorage.setItem("todo", JSON.stringify({ todoList: tData, todoCompletedList: getTodo }))
+
                       setFlag(!flag)
                     }}
                     checked={item.completed}
@@ -259,13 +223,9 @@ export default function Home() {
                     buttontype="secondary"
                     title="Delete"
                     onClick={() => {
-                      const localTodo = localStorage.getItem("todo")
-                      if (localTodo) {
-                        const { todoList, todoCompletedList }: any = JSON.parse(localTodo)
-                        const data = todoCompletedList.filter((io: any) => io.id !== item.id)
-                        localStorage.setItem("todo", JSON.stringify({ todoList: todoList, todoCompletedList: data }))
-                        setFlag(!flag)
-                      }
+                      const data = todoCompletedList.filter((io: any) => io.id !== item.id)
+                      localStorage.setItem("todo", JSON.stringify({ todoList: todoList, todoCompletedList: data }))
+                      setFlag(!flag)
                     }}
                     className="text-sm"
                   />

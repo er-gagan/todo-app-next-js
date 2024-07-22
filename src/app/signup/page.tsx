@@ -48,7 +48,7 @@ const SignUp = () => {
       <div className='lg:p-14 lg:w-6/12 w-full p-14 h-screen'>
         <div className='flex flex-col justify-center h-5/6'>
           <div className='font-black text-3xl'>
-            Start using CraftIndika today!
+            Start using Todo App today!
           </div>
           <div className='text-2xl mt-20 '>
             Sign Up
@@ -81,7 +81,17 @@ const SignUp = () => {
                   />
                 </div>
               </div>
-
+              <div className='mt-4'>
+                <Input
+                  labeltext="Phone"
+                  type="number"
+                  onChange={(e: any) => {
+                    setSignupFormData({ ...signupFormData, phone: e.target.value })
+                  }}
+                  value={signupFormData.phone}
+                  placeholder="Enter your phone"
+                />
+              </div>
               <div className='mt-4'>
                 <Input
                   labeltext="Email Address"
@@ -106,17 +116,7 @@ const SignUp = () => {
                   placeholder="Enter your password"
                 />
               </div>
-              <div className='mt-4'>
-                <Input
-                  labeltext="Phone"
-                  type="number"
-                  onChange={(e: any) => {
-                    setSignupFormData({ ...signupFormData, phone: e.target.value })
-                  }}
-                  value={signupFormData.phone}
-                  placeholder="Enter your phone"
-                />
-              </div>
+
 
               <div className='mt-4'>
 
@@ -131,7 +131,7 @@ const SignUp = () => {
           </form>
         </div>
         <div className='text-center text-primary3'>
-          {/* © {new Date().getFullYear()} All rights reserved. */}
+          © {new Date().getFullYear()} All rights reserved.
         </div>
       </div>
     </div>

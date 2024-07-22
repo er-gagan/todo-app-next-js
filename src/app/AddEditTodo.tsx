@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import Button from '@/components/Button';
 import Input from '@/components/input';
+import { createId } from '@paralleldrive/cuid2';
+
 const AddEditTodo = (props: any) => {
     const { onClose, flag, setFlag, editData, setEditData } = props
     const { id } = editData
@@ -55,7 +57,7 @@ const AddEditTodo = (props: any) => {
                         } else {
                             const obj = {
                                 completed: false,
-                                id: todoList.length + 1,
+                                id: createId(),
                                 sr_no: todoList.length + 1,
                                 title: title,
                                 userId: userData.email
@@ -68,7 +70,7 @@ const AddEditTodo = (props: any) => {
                     } else {
                         const obj = {
                             completed: false,
-                            id: 1,
+                            id: createId(),
                             sr_no: 1,
                             title: title,
                             userId: userData.email

@@ -36,7 +36,6 @@ const Signin = () => {
         }
       }
       toast.error("Invallid credentials!")
-      // localStorage.clear()
     } catch (err: any) {
       toast.error(err.message)
     }
@@ -52,7 +51,7 @@ const Signin = () => {
         <div className='lg:p-14 lg:w-6/12 w-full p-14 h-screen'>
           <div className='flex flex-col justify-center h-5/6'>
             <div className='font-black text-3xl'>
-              CraftIndika Retail Pvt Ltd
+              Todo App
             </div>
             <div className='text-2xl mt-20 '>
               Sign In

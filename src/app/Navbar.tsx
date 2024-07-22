@@ -17,14 +17,10 @@ const Navbar = () => {
             let signupLocalData: any = localStorage.getItem("userAuth")
             if (signupLocalData) {
                 signupLocalData = JSON.parse(signupLocalData)
-                let localUserData: any = localStorage.getItem("userData")
-                if (localUserData) {
-                    localUserData = JSON.parse(localUserData)
-                    localStorage.setItem("isLoggedIn", "")
-                    localStorage.setItem("userData", "")
-                    location.replace("/signin")
-                    return
-                }
+                localStorage.setItem("isLoggedIn", "")
+                localStorage.setItem("userData", "")
+                location.replace("/signin")
+                return
             }
             localStorage.clear()
             location.replace("/signin")
@@ -39,7 +35,7 @@ const Navbar = () => {
                 <div className='flex justify-between'>
                     <div className='flex'>
                         <div className='font-extrabold text-2xl mr-16 cursor-pointer' onClick={() => handleNavigation({ path: "/", router })}>
-                            CraftIndika Retail Pvt Ltd
+                            Todo App
                         </div>
                     </div>
 
